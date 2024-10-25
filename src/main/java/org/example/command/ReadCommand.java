@@ -12,7 +12,13 @@ public class ReadCommand implements IOCommand{
         this.filePath = filePath;
     }
     @Override
-    public void execute() throws IOException {
-        this.htmlModel.readFromPath(filePath);
+    public void execute() {
+        try {
+            this.htmlModel.readFromPath(filePath);
+        }
+        catch (IOException e) {
+            System.out.println(e);
+            throw new RuntimeException(e);
+        }
     }
 }

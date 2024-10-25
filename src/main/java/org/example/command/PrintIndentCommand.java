@@ -17,6 +17,6 @@ public class PrintIndentCommand implements Command{
     public void execute() {
         this.htmlModel.setPrintStrategy(new TreePrintStrategy());
 
-        this.htmlModel.print(this.htmlModel.getElementById("html"));
+//        this.htmlModel.print(this.htmlModel.getElementById("html"));
     }
 }

@@ -14,7 +14,12 @@ public class SaveCommand implements IOCommand{
     }
 
     @Override
-    public void execute() throws IOException {
-        this.htmlModel.saveToPath(filePath);
+    public void execute()  {
+        try{
+            this.htmlModel.saveToPath(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

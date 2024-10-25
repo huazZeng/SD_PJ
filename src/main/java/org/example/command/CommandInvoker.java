@@ -1,12 +1,13 @@
 package org.example.command;
 
+import java.io.IOException;
 import java.util.Stack;
 
 public class CommandInvoker {
     private final Stack<CanUndoCommand> commandStack = new Stack<>();
     private final Stack<CanUndoCommand> undoneCommands = new Stack<>();
 
-    public void storeAndExecute(Command command) {
+    public void storeAndExecute(Command command)  {
         command.execute();
         if (command instanceof CanUndoCommand) {
             commandStack.push((CanUndoCommand) command);

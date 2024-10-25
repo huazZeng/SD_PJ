@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 public class HTMLModel {
     private Document document;
-
+    private HTMLTree htmlTree;
     private PrintStrategy printStrategy;
 
     // 构造函数和其他方法...
@@ -29,15 +29,9 @@ public class HTMLModel {
     }
 
 
-    // 构造函数接受HTML字符串或URL
     public HTMLModel(String html) {
         this.document = Jsoup.parse(html);  // 解析HTML字符串
-    }
-
-    // 从URL加载HTML
-    public HTMLModel fromUrl(String url) throws IOException {
-        this.document = Jsoup.connect(url).get();  // 从URL加载HTML
-        return this;
+        this.htmlTree = new HTMLTree(document);
     }
 
     // 获取文档标题
@@ -51,17 +45,16 @@ public class HTMLModel {
     }
 
     // 获取指定ID的元素
-    public Element getElementById(String id) {
-        return document.getElementById(id);
+    public HtmlElement getElementById(String id) {
+        return htmlTree.getElementById(id);
     }
     public String getElementContent(String elementId) {
-        Element element = getElementById(elementId);
-        return element != null ? element.html() : null; // 返回元素的内部 HTML 内容
+
+        return htmlTree.getElementContent(elementId);
     }
-    public String getLastElementContent(String elementId) {
-        Element element = getElementById(elementId);
-        Element nextElement = element != null ? element.nextElementSibling() : null;
-        return nextElement.id();
+    public String getNextElementId(String elementId) {
+
+        return htmlTree.getNextElementId(elementId);
     }
 
     // 获取指定标签内的文本
@@ -73,49 +66,22 @@ public class HTMLModel {
 
     // 插入新元素
     public void insert(String tagName, String idValue, String insertLocation, String textContent) {
-        Element newElement = new Element(tagName).attr("id", idValue);
-        if (textContent != null) {
-            newElement.text(textContent);
-        }
-        Element locationElement = getElementById(insertLocation);
-        if (locationElement != null) {
-            locationElement.before(newElement);
-        }
+        htmlTree.insert(tagName,idValue,insertLocation,textContent);
     }
 
     public void append(String tagName, String idValue, String parentElement, String textContent) {
-        Element newElement = new Element(tagName).attr("id", idValue);
-        if (textContent != null) {
-            newElement.text(textContent);
-        }
-        Element parent = getElementById(parentElement);
-        if (parent != null) {
-            parent.appendChild(newElement);
-        }
+        htmlTree.append(tagName,idValue,parentElement,textContent);
     }
 
     public void editId(String oldId, String newId) {
-        Element element = getElementById(oldId);
-        if (element != null) {
-            element.attr("id", newId);
-        }
+        htmlTree.editId(oldId,newId);
     }
 
     public void editText(String elementId, String newTextContent) {
-        Element element = getElementById(elementId);
-        if (element != null) {
-            if (newTextContent != null) {
-                element.text(newTextContent);
-            } else {
-                element.text("");  // 清空文本内容
-            }
-        }
+        htmlTree.editText(elementId,newTextContent);
     }
     public void delete(String elementId) {
-        Element element = getElementById(elementId);
-        if (element != null) {
-            element.remove();
-        }
+       htmlTree.delete(elementId);
     }
 
     public void init() {
@@ -129,11 +95,12 @@ public class HTMLModel {
     public void readFromPath(String filepath) throws IOException {
         String html = new String(Files.readAllBytes(Paths.get(filepath)));
         this.document = Jsoup.parse(html);
+        this.htmlTree = new HTMLTree(this.document);
     }
 
     public void saveToPath(String filepath) throws IOException {
-        String html = document.outerHtml();
-        Files.write(Paths.get(filepath), html.getBytes());
+
+        Files.write(Paths.get(filepath), this.htmlTree.toString().getBytes());
     }
 }
 

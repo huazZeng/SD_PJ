@@ -1,6 +1,7 @@
 package org.example.command;
 
 import org.example.model.HTMLModel;
+import org.example.model.HtmlElement;
 
 public class DeleteCommand implements CanUndoCommand{
     private HTMLModel htmlModel;
@@ -19,9 +20,10 @@ public class DeleteCommand implements CanUndoCommand{
 
     @Override
     public void execute() {
-        this.Context=this.htmlModel.getElementById(element).text();
-        this.tagName=this.htmlModel.getElementById(element).tagName();
-        this.NextId=this.htmlModel.getLastElementContent(element);
+        HtmlElement element1 = this.htmlModel.getElementById(element);
+        this.Context=element1.getText();
+        this.tagName=element1.getTagName();
+        this.NextId=this.htmlModel.getNextElementId(element);
         this.htmlModel.delete(element);
     }
 }

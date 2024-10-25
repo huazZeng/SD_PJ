@@ -11,11 +11,15 @@ public class CommandParser {
         this.htmlModel = htmlModel;
         this.commandInvoker = commandInvoker;
     }
-
+    private boolean isInitCommand(String s){
+        return (s=="init") || (s == "read");
+    }
     public void parseCommand(String commandline) {
         String[] parts = commandline.split(" ");
         String action = parts[0];
-
+        if (!this.htmlModel.GetStatus() && !isInitCommand(action)) {
+            throw new IllegalStateException("模型未定义。请确保模型已初始化。");
+        }
         switch (action) {
             case "insert":
                 handleInsert(parts);

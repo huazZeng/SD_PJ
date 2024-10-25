@@ -20,20 +20,22 @@ public class HTMLModel {
         this.printStrategy = printStrategy;
     }
 
-    public void print(Element element) {
-        if (printStrategy != null) {
-            printStrategy.print(element, 0); // 从根元素开始打印
-        } else {
-            System.out.println("No print strategy set.");
-        }
+    public void print() {
+        this.printStrategy.print(this.htmlTree.getRoot(),2);
     }
 
 
     public HTMLModel(String html) {
         this.document = Jsoup.parse(html);  // 解析HTML字符串
-        this.htmlTree = new HTMLTree(document);
+        this.htmlTree = new HTMLTree(this.document);
     }
-
+    public HTMLModel() {
+        this.document = null;  // 解析HTML字符串
+        this.htmlTree = null;
+    }
+    public boolean GetStatus(){
+        return this.htmlTree!=null ;
+    }
     // 获取文档标题
     public String getTitle() {
         return document.title();
@@ -91,6 +93,7 @@ public class HTMLModel {
                 "  </head>\n" +
                 "  <body></body>\n" +
                 "</html>");
+        this.htmlTree = new HTMLTree(this.document);
     }
     public void readFromPath(String filepath) throws IOException {
         String html = new String(Files.readAllBytes(Paths.get(filepath)));

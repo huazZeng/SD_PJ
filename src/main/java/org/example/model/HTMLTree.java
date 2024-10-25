@@ -92,11 +92,15 @@ class HTMLTree {
         idMap.remove(elementId);
     }
 
-    public void printIndented(int indent) {
-        System.out.println(root.toIndentedString(indent, 0));
+    public String printIndented(int indent) {
+        return root.toIndentedString(indent, 0);
     }
 
-    public void printTree() {
-        System.out.println(root.toString());
+    public String printTree() {
+        return root.toString();
+    }
+
+    public HtmlElement getRoot() {
+        return this.root;
     }
 }

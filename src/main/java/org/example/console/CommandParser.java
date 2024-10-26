@@ -61,14 +61,13 @@ public class CommandParser {
                 handleRedo();
                 break;
             default:
-                System.out.println("Unknown command: " + action);
+                throw new IllegalStateException("no such command");
         }
     }
 
     private void handleInsert(String[] parts) {
         if (parts.length < 4) {
-            System.out.println("Invalid syntax for insert command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for insert command.");
         }
         String tagName = parts[1];
         String idValue = parts[2];
@@ -81,8 +80,7 @@ public class CommandParser {
 
     private void handleAppend(String[] parts) {
         if (parts.length < 4) {
-            System.out.println("Invalid syntax for append command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for append command.");
         }
         String tagName = parts[1];
         String idValue = parts[2];
@@ -95,8 +93,8 @@ public class CommandParser {
 
     private void handleEditId(String[] parts) {
         if (parts.length != 3) {
-            System.out.println("Invalid syntax for edit-id command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for editId command.");
+
         }
         String oldId = parts[1];
         String newId = parts[2];
@@ -107,8 +105,7 @@ public class CommandParser {
 
     private void handleEditText(String[] parts) {
         if (parts.length < 2) {
-            System.out.println("Invalid syntax for edit-text command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for editText command.");
         }
         String element = parts[1];
         String newTextContent = (parts.length > 2) ? parts[2] : "";
@@ -119,8 +116,7 @@ public class CommandParser {
 
     private void handleDelete(String[] parts) {
         if (parts.length != 2) {
-            System.out.println("Invalid syntax for delete command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for delete command.");
         }
         String element = parts[1];
 
@@ -146,8 +142,7 @@ public class CommandParser {
 
     private void handleRead(String[] parts) {
         if (parts.length != 2) {
-            System.out.println("Invalid syntax for read command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for Read command.");
         }
         String filepath = parts[1];
         ReadCommand readCommand = new ReadCommand(htmlModel,filepath);
@@ -156,8 +151,7 @@ public class CommandParser {
 
     private void handleSave(String[] parts) {
         if (parts.length != 2) {
-            System.out.println("Invalid syntax for save command.");
-            return;
+            throw new IllegalArgumentException("Invalid syntax for Save command.");
         }
         String filepath = parts[1];
         SaveCommand saveCommand = new SaveCommand(htmlModel,filepath);

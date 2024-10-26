@@ -29,6 +29,9 @@ public class console {
             catch (IllegalStateException e ){
                 System.out.println(e.toString());
             }
+            catch (IllegalArgumentException e ){
+                System.out.println(e.toString());
+            }
 
         }
 

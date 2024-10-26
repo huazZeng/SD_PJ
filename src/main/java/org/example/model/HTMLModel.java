@@ -21,7 +21,7 @@ public class HTMLModel {
     }
 
     public void print() {
-        System.out.println(this.htmlTree.printTree());
+        System.out.println(this.htmlTree.printIndented(2));
     }
 
 

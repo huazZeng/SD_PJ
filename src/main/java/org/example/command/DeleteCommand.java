@@ -9,13 +9,19 @@ public class DeleteCommand implements CanUndoCommand{
     private String NextId;
     private String Context;
     private String tagName;
+    private  String Parent;
     public DeleteCommand(HTMLModel htmlModel, String element) {
         this.htmlModel = htmlModel;
         this.element = element;
     }
     @Override
     public void undo() {
-        this.htmlModel.insert(this.tagName,this.element,this.NextId,this.Context);
+        if (this.NextId!=null) {
+            this.htmlModel.insert(this.tagName, this.element, this.NextId, this.Context);
+        }
+        else {
+            this.htmlModel.append(this.tagName, this.element, this.Parent, this.Context);
+        }
     }
 
     @Override
@@ -24,6 +30,7 @@ public class DeleteCommand implements CanUndoCommand{
         this.Context=element1.getText();
         this.tagName=element1.getTagName();
         this.NextId=this.htmlModel.getNextElementId(element);
+        this.Parent=element1.getParent().getId();
         this.htmlModel.delete(element);
     }
 }

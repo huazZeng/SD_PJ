@@ -71,6 +71,8 @@ public class HtmlElement {
         for (HtmlElement child : children) {
             sb.append("\n").append(child.toIndentedString(indent, indentLevel + 1));
         }
+        sb.append("\n");
+        sb.append(" ".repeat(indent * indentLevel));
         sb.append("</").append(tagName).append(">");
         return sb.toString();
     }

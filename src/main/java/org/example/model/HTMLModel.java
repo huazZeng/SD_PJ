@@ -20,9 +20,12 @@ public class HTMLModel {
         this.printStrategy = printStrategy;
     }
 
-    public void print() {
-        System.out.println(this.htmlTree.printIndented(2));
+    public String print() {
+        StringBuilder sb = new StringBuilder();
+        this.printStrategy.print(this.htmlTree.getRoot().getChildren().get(0),0,sb);
+        return  sb.toString();
     }
+
 
 
     public HTMLModel(String html) {

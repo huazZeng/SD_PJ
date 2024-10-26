@@ -16,8 +16,8 @@ public class PrintIndentCommand implements Command{
 
     @Override
     public void execute() {
-        this.htmlModel.setPrintStrategy(new IndentPrintStrategy('-'));
+        this.htmlModel.setPrintStrategy(new IndentPrintStrategy());
 
-        this.htmlModel.print();
+        System.out.println(this.htmlModel.print());
     }
 }

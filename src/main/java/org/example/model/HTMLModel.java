@@ -21,7 +21,7 @@ public class HTMLModel {
     }
 
     public void print() {
-        this.printStrategy.print(this.htmlTree.getRoot(),2);
+        System.out.println(this.htmlTree.printTree());
     }
 
 

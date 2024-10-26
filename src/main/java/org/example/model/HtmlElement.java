@@ -80,7 +80,7 @@ public class HtmlElement {
         StringBuilder sb = new StringBuilder("<").append(tagName).append(" id=\"").append(id).append("\">");
         if (text != null) sb.append(text);
         for (HtmlElement child : children) sb.append("\n  ").append(child.toString());
-        sb.append("</").append(tagName).append(">");
+        sb.append("</").append(tagName).append(">\n");
         return sb.toString();
     }
 
@@ -90,5 +90,6 @@ public class HtmlElement {
         for (HtmlElement child : children) innerHtml.append(child.toString());
         return innerHtml.toString();
     }
+
 
 }

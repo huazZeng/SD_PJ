@@ -16,6 +16,6 @@ public class PrintTreeCommand implements Command{
     @Override
     public void execute() {
         this.htmlModel.setPrintStrategy(new TreePrintStrategy());
-//        this.htmlModel.print();
+        this.htmlModel.print();
     }
 }

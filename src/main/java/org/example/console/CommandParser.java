@@ -12,7 +12,7 @@ public class CommandParser {
         this.commandInvoker = commandInvoker;
     }
     private boolean isInitCommand(String s){
-        return (s=="init") || (s == "read");
+        return (s.equals("init")) || (s.equals("read"));
     }
     public void parseCommand(String commandline) {
         String[] parts = commandline.split(" ");

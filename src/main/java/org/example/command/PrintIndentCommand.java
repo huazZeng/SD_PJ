@@ -1,6 +1,7 @@
 package org.example.command;
 
 import org.example.model.HTMLModel;
+import org.example.model.IndentPrintStrategy;
 import org.example.model.TreePrintStrategy;
 
 public class PrintIndentCommand implements Command{
@@ -15,8 +16,8 @@ public class PrintIndentCommand implements Command{
 
     @Override
     public void execute() {
-        this.htmlModel.setPrintStrategy(new TreePrintStrategy());
+        this.htmlModel.setPrintStrategy(new IndentPrintStrategy('-'));
 
-//        this.htmlModel.print(this.htmlModel.getElementById("html"));
+        this.htmlModel.print();
     }
 }

@@ -2,7 +2,6 @@ package org.example.model;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
@@ -39,15 +38,7 @@ public class HTMLModel {
     public boolean GetStatus(){
         return this.htmlTree!=null ;
     }
-    // 获取文档标题
-    public String getTitle() {
-        return document.title();
-    }
 
-    // 获取指定标签的内容 (如 <p>, <div>)
-    public Elements getElementsByTag(String tagName) {
-        return document.getElementsByTag(tagName);
-    }
 
     // 获取指定ID的元素
     public HtmlElement getElementById(String id) {

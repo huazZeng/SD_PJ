@@ -37,10 +37,12 @@ public class HTMLModel {
     public HTMLModel(String html) {
         this.document = Jsoup.parse(html);  // 解析HTML字符串
         this.htmlTree = new HTMLTree(this.document);
+        this.printStrategy = new IndentPrintStrategy();
     }
     public HTMLModel() {
         this.document = null;  // 解析HTML字符串
         this.htmlTree = null;
+        this.printStrategy = new IndentPrintStrategy();
     }
     public boolean GetStatus(){
         return this.htmlTree!=null ;

@@ -108,9 +108,19 @@ public class CommandParser {
             throw new IllegalArgumentException("Invalid syntax for editText command.");
         }
         String element = parts[1];
-        String newTextContent = (parts.length > 2) ? parts[2] : "";
-//
+        //我需要的newTextContent是2之后的所有string拼接
+
+        StringBuilder textContentBuilder = new StringBuilder();
+        for (int i = 2; i < parts.length; i++) {
+            if (i > 2) {
+                textContentBuilder.append(" "); // 添加空格分隔多个部分
+            }
+            textContentBuilder.append(parts[i]);
+        }
+        String newTextContent = textContentBuilder.toString();
+
         EditTextCommand editTextCommand = new EditTextCommand(htmlModel, element, newTextContent);
+
         commandInvoker.storeAndExecute(editTextCommand);
     }
 

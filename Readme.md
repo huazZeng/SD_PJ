@@ -9,6 +9,7 @@ maven load 之后就可以直接运行
 ## 结构
 ### 类图
 * 总体结构上采用命令模式，分为 Command相关的模块和HtmlModel相关的模块
+* 在各自模块内都没有IO交互等操作，便于自动化测试
 * 在Command模块中
   * Invoker通过命令的不同类型来进行不同的操作
   * 抽象为两级命令，便于区分具有不同特性的命令
@@ -20,7 +21,6 @@ maven load 之后就可以直接运行
   * 首先用一层HTMLModel来断开HTMLTree与解析第三方包的联系
   * 使用策略模式来实现print的不同方式
   * 在Model模块中，不做任何IO操作，对于print等指令，返回需要输出的String；遇到问题，只是抛出异常，由顶层的console来处理，便于测试；
-
 ```mermaid
 classDiagram
     class CommandParser {

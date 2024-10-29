@@ -2,17 +2,24 @@ package org.example.model;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.languagetool.JLanguageTool;
+import org.languagetool.Languages;
+import org.languagetool.language.AmericanEnglish;
+import org.languagetool.rules.RuleMatch;
 
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HTMLModel {
     private Document document;
     private HTMLTree htmlTree;
     private PrintStrategy printStrategy;
-
+    private JLanguageTool langTool = new JLanguageTool(new AmericanEnglish());
     // 构造函数和其他方法...
 
     public void setPrintStrategy(PrintStrategy printStrategy) {
@@ -75,6 +82,7 @@ public class HTMLModel {
 
     public void editText(String elementId, String newTextContent) {
         htmlTree.editText(elementId,newTextContent);
+
     }
     public void delete(String elementId) {
        htmlTree.delete(elementId);
@@ -98,6 +106,40 @@ public class HTMLModel {
     public void saveToPath(String filepath) throws IOException {
 
         Files.write(Paths.get(filepath), this.htmlTree.toString().getBytes());
+    }
+
+    public void setDocument(Document doc) {
+        this.document = doc;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+    public Map SpellCheck() {
+        // 获取所有元素的 ID 和对应的文本内容
+        Map<String, String> id2Context = htmlTree.getId2Context();
+        Map<String, String> result = new HashMap<>();
+
+        // 初始化 LanguageTool，使用美国英语
+
+
+        // 遍历每个元素的文本内容，进行拼写检查
+        for (Map.Entry<String, String> entry : id2Context.entrySet()) {
+            String id = entry.getKey();
+            String text = entry.getValue();
+            try {
+                // 检查文本
+                List<RuleMatch> matches = langTool.check(text);
+                for (RuleMatch match : matches) {
+
+                    result.put(id,text.substring(match.getFromPos(), match.getToPos())+'\n'+match.getSuggestedReplacements().toString());
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 }
 

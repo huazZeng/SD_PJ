@@ -94,12 +94,19 @@ classDiagram
 
 ### CommandParser
 **主要测试能否判断指令合法性和参数合法性，指令执行效果**
-
+* 
 ### CommandInvoker
 **测试指令能否执行，redo，undo效果**
-
+* **CommandInvokerMockTest**
+  * 通过mockCommand来测试 undo redo 以及使用IOCommand之后清空栈等特殊情况
+*  **CommandInvokerConcreteTest**
+  * 对各个命令进行测试
 ### HTMLTree
 **测试各个修改model的函数是否有效**
-
+* **HTMLTreeTest**
+  * 测试各个修改Tree的函数是否生效
 ### HTMLModel
 **测试解析效果 读入保存 print即可**
+* HTMLModelTest
+  * 测试写入读出是否正常
+  * 测试checkSpell

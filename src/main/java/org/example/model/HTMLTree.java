@@ -9,9 +9,10 @@ import java.util.Map;
 public class HTMLTree {
     private HtmlElement root;
     private Map<String, HtmlElement> idMap;
-
+    private Map<String, String> id2context;
     public HTMLTree(Document doc) {
         this.idMap = new HashMap<>();
+        this.id2context = new HashMap<>();
         this.root = buildTree(doc);
     }
     public HtmlElement getElementById(String id) {
@@ -41,8 +42,11 @@ public class HTMLTree {
         String tagName = element.tagName();
         String id = element.hasAttr("id") ? element.attr("id") : tagName;
         if (idMap.containsKey(id)) throw new IllegalArgumentException("ID must be unique: " + id);
+        if (id2context.containsKey(id)) throw new IllegalArgumentException("ID must be unique: " + id);
+
         HtmlElement htmlElement = new HtmlElement(tagName, id, element.ownText());
         idMap.put(id, htmlElement);
+        id2context.put(id, element.ownText());
         for (Element child : element.children()) htmlElement.addChild(buildTree(child));
         return htmlElement;
     }
@@ -81,6 +85,8 @@ public class HTMLTree {
         HtmlElement element = idMap.get(elementId);
         if (element == null) throw new IllegalArgumentException("Element with id " + elementId + " not found.");
         element.setText(newText);
+        id2context.remove(elementId);
+        id2context.put(elementId, newText);
     }
 
     public void delete(String elementId) {
@@ -128,7 +134,9 @@ public class HTMLTree {
     }
 
 
+    public Map getId2Context() {
+        return id2context;
 
-
+    }
 }
 

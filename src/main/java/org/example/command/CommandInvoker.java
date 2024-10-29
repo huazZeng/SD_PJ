@@ -6,6 +6,12 @@ public class CommandInvoker {
     private final Stack<CanUndoCommand> commandStack = new Stack<>();
     private final Stack<CanUndoCommand> undoneCommands = new Stack<>();
 
+    public int getCommandStackSize() {
+        return commandStack.size();
+    }
+    public int getUndoneCommandSize() {
+        return undoneCommands.size();
+    }
     public void storeAndExecute(Command command)  {
         command.execute();
         if (command instanceof CanUndoCommand) {
@@ -32,5 +38,9 @@ public class CommandInvoker {
             command.execute();
             commandStack.push(command);
         }
+    }
+
+    public Command getLastCommand() {
+        return commandStack.peek();
     }
 }

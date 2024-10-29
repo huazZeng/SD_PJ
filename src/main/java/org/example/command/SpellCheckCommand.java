@@ -2,6 +2,8 @@ package org.example.command;
 
 import org.example.model.HTMLModel;
 
+import java.util.Map;
+
 public class SpellCheckCommand implements Command{
 
 
@@ -13,6 +15,9 @@ public class SpellCheckCommand implements Command{
 
     @Override
     public void execute() {
-
+        Map <String, String> misspelledWords = this.htmlModel.SpellCheck();
+        for (String word : misspelledWords.keySet()) {
+            System.out.println("Word: " + word + " wrong: " + misspelledWords.get(word));
+        }
     }
 }

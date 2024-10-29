@@ -20,11 +20,23 @@
             <artifactId>jsoup</artifactId>
             <version>1.16.1</version> <!-- 请根据需要选择版本 -->
         </dependency>
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-en</artifactId>
+            <version>6.5</version>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.languagetool</groupId>-->
-<!--            <artifactId>language-en</artifactId>-->
-<!--            <version>6.5</version>-->
+<!--            <artifactId>language-tool</artifactId>-->
+<!--            <version>5.8</version> &lt;!&ndash; 请使用最新版本 &ndash;&gt;-->
 <!--        </dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>

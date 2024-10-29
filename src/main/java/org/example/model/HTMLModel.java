@@ -104,8 +104,9 @@ public class HTMLModel {
     }
 
     public void saveToPath(String filepath) throws IOException {
-
-        Files.write(Paths.get(filepath), this.htmlTree.toString().getBytes());
+        StringBuilder sb = new StringBuilder();
+        new IndentPrintStrategy( ).print(this.htmlTree.getRoot().getChildren().get(0),0,sb);
+        Files.write(Paths.get(filepath), sb.toString().getBytes());
     }
 
     public void setDocument(Document doc) {

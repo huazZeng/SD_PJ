@@ -16,6 +16,7 @@ public class SpellCheckCommand implements Command{
     @Override
     public void execute() {
         Map <String, String> misspelledWords = this.htmlModel.SpellCheck();
+        System.out.println("spell check result:\n");
         for (String word : misspelledWords.keySet()) {
             System.out.println("Word: " + word + " wrong: " + misspelledWords.get(word));
         }

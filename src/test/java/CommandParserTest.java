@@ -70,7 +70,7 @@ public class CommandParserTest {
         commandParser.parseCommand(command1);
         String command = "delete toDelete";
         commandParser.parseCommand(command);
-        assertFalse(htmlModel.getElementById("toDelete")==null);
+        assertTrue(htmlModel.getElementById("toDelete")==null);
     }
 
 
@@ -93,16 +93,38 @@ public class CommandParserTest {
     }
 
     @Test
-    public void testHandleUndo() {
-        String command = "undo";
+    public void testHandleDeleteUndo() {
+        String command1 = "append div toDelete body text";
+        commandParser.parseCommand(command1);
+        String command = "delete toDelete";
         commandParser.parseCommand(command);
+
+        String command2 = "undo";
+        commandParser.parseCommand(command2);
+        assertTrue(htmlModel.getElementById("toDelete")!=null);
 
     }
+    @Test
+    public void testHandleAppendUndo() {
+        String command1 = "append div toDelete body text";
+        commandParser.parseCommand(command1);
 
+        String command2 = "undo";
+        commandParser.parseCommand(command2);
+        assertTrue(htmlModel.getElementById("toDelete")==null);
+
+    }
     @Test
     public void testHandleRedo() {
-        String command = "redo";
+        String command1 = "append div toDelete body text";
+        commandParser.parseCommand(command1);
+        String command = "delete toDelete";
         commandParser.parseCommand(command);
 
+        String command2 = "undo";
+        commandParser.parseCommand(command2);
+        String command3 = "redo";
+        commandParser.parseCommand(command3);
+        assertTrue(htmlModel.getElementById("toDelete")==null);
     }
 }

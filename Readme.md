@@ -5,7 +5,11 @@ jdk 19
 依赖见 **pom.xml**
 maven load 之后就可以直接运行
 项目代码入口为**src/main/java/org/example/console/console.java**
-
+启动方法：
+**在Lab1项目工作目录下**
+```bash
+java -jar target\lab1-1.0-SNAPSHOT.jar
+```
 ## 结构
 ### 结构
 * 总体结构上采用命令模式，分为 Command相关的模块和HtmlModel相关的模块
@@ -25,6 +29,7 @@ maven load 之后就可以直接运行
 
 ### 存在的问题
 * 是否要把handle指令模块单独拿出 来解耦前端parser
+* 如果需要添加print-tree对其他结构的支持，是否需要加入一个接口类似HasChildren，来使得print-tree能支持所有的树状结构；目前支持HtmlElement；但引入接口后，可以快速泛化到其他结构上
 
 ### 类图
 

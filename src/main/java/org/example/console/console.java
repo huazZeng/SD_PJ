@@ -5,6 +5,7 @@ import org.example.command.CommandInvoker;
 import org.example.model.HTMLModel;
 
 import java.io.Console;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class console {
@@ -31,6 +32,8 @@ public class console {
             }
             catch (IllegalArgumentException e ){
                 System.out.println(e.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
         }

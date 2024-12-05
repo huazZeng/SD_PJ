@@ -4,11 +4,8 @@ import org.example.command.*;
 import org.example.model.HTMLModel;
 import org.example.model.HtmlElement;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class CommandParser {
     private Map<String, Editor> editors; // 所有打开的编辑器
@@ -17,10 +14,10 @@ public class CommandParser {
     public CommandParser(CommandInvoker commandInvoker) {
         this.editors = new HashMap<>();
         this.activeEditor = null;
-
+        this.restoreExitState();
     }
 
-    public void parseCommand(String commandline) {
+    public void parseCommand(String commandline) throws IOException {
         String[] parts = commandline.split(" ");
         String action = parts[0];
 
@@ -277,25 +274,9 @@ public class CommandParser {
         if (editors.containsKey(filepath)) {
             throw new IllegalStateException("File is already loaded.");
         }
+        Editor newEditor = new Editor(filepath);
 
-        File file = new File(filepath);
 
-        HTMLModel htmlModel = new HTMLModel();
-        if (file.exists()) {
-            // 如果文件存在，则加载文件并设置 modified 为 false
-            htmlModel.readFromPath(filepath);  // 假设 load 方法会加载文件内容
-            Editor newEditor = new Editor(filepath, htmlModel);
-            editors.put(filepath, newEditor);
-            activeEditor = newEditor; // 自动切换到新加载的编辑器
-            newEditor.setModified(false); // 文件存在，未修改
-        } else {
-            // 如果文件不存在，则初始化 HTML 模板并设置 modified 为 true
-            htmlModel.init(); // 初始化默认模板
-            Editor newEditor = new Editor(filepath, htmlModel);
-            editors.put(filepath, newEditor);
-            activeEditor = newEditor; // 自动切换到新加载的编辑器
-            newEditor.setModified(true); // 文件存在，未修改
-        }
 
     }
 
@@ -366,5 +347,75 @@ public class CommandParser {
         }
         System.exit(0); // 退出程序
     }
+
+    private void saveExitState() {
+        List<String> editorList = new ArrayList<>(editors.keySet());
+        String activeEditorPath = (activeEditor != null) ? activeEditor.getFilepath() : null;
+        Map<String, Boolean> showidSettings = new HashMap<>();
+        for (Editor editor : editors.values()) {
+            showidSettings.put(editor.getFilepath(), editor.getshowid());
+        }
+
+        // 创建 ExitState 对象
+        ExitState exitState = new ExitState(editorList, activeEditorPath, showidSettings);
+
+        // 将 ExitState 对象序列化为字节流并保存到文件
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("exit_state.dat"))) {
+            oos.writeObject(exitState);
+            System.out.println("Exit state has been saved.");
+        } catch (IOException e) {
+            System.out.println("Error saving exit state: " + e.getMessage());
+        }
+    }
+
+    // 恢复退出状态
+    private void restoreExitState() {
+        // 从字节流文件反序列化 ExitState 对象
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("exit_state.dat"))) {
+            ExitState exitState = (ExitState) ois.readObject();
+
+            // 恢复编辑器列表
+            if (exitState.editorList != null) {
+                for (String filePath : exitState.editorList) {
+                    Editor editor = new Editor(filePath);
+                    editors.put(filePath, editor);
+                }
+            }
+
+            // 恢复活动编辑器
+            if (exitState.activeEditorPath != null) {
+                activeEditor = editors.get(exitState.activeEditorPath);
+            }
+
+            // 恢复每个编辑器的 showid 设置
+            if (exitState.showidSettings != null) {
+                for (Map.Entry<String, Boolean> entry : exitState.showidSettings.entrySet()) {
+                    Editor editor = editors.get(entry.getKey());
+                    if (editor != null) {
+                        editor.setShowid(entry.getValue());
+                    }
+                }
+            }
+
+            System.out.println("Exit state has been restored.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No previous exit state found. Starting with a fresh session.");
+        }
+    }
+
+    // ExitState 类实现 Serializable
+    class ExitState implements Serializable {
+        private static final long serialVersionUID = 1L; // 为了确保版本兼容性
+        List<String> editorList;
+        String activeEditorPath;
+        Map<String, Boolean> showidSettings;
+
+        ExitState(List<String> editorList, String activeEditorPath, Map<String, Boolean> showidSettings) {
+            this.editorList = editorList;
+            this.activeEditorPath = activeEditorPath;
+            this.showidSettings = showidSettings;
+        }
+    }
+
 }
 

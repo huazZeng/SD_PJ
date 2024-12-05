@@ -11,7 +11,7 @@ public class console {
     public static void main(String[] args) {
         CommandInvoker commandInvoker = new CommandInvoker();
         HTMLModel htmlModel = new HTMLModel();
-        CommandParser parser = new CommandParser(htmlModel,commandInvoker);
+        CommandParser parser = new CommandParser(commandInvoker);
         String exitCommand = "exit"; // 定义推出条件
 
         System.out.println("请输入命令（输入 'exit' 退出）：");

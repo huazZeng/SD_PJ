@@ -1,9 +1,8 @@
 package org.example.command;
 
 import org.example.console.Editor;
-import org.example.model.HTMLModel;
-import org.example.model.IndentPrintStrategy;
-import org.example.model.TreePrintStrategy;
+import org.example.model.IndentVisitor;
+
 
 public class PrintIndentCommand implements Command{
 
@@ -17,7 +16,7 @@ public class PrintIndentCommand implements Command{
 
     @Override
     public void execute() {
-        this.editor.setPrintStrategy(new IndentPrintStrategy());
+        this.editor.setVisitor(new IndentVisitor());
 
         System.out.println(this.editor.print());
     }

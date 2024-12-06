@@ -2,7 +2,7 @@ package org.example.console;
 
 import org.example.command.Command;
 import org.example.command.CommandInvoker;
-import org.example.model.HTMLModel;
+
 
 import java.io.Console;
 import java.io.IOException;
@@ -10,9 +10,8 @@ import java.util.Scanner;
 
 public class console {
     public static void main(String[] args) {
-        CommandInvoker commandInvoker = new CommandInvoker();
-        HTMLModel htmlModel = new HTMLModel();
-        CommandParser parser = new CommandParser(commandInvoker);
+
+        CommandParser parser = new CommandParser();
 
 
         System.out.println("请输入命令（输入 'exit' 退出）：");

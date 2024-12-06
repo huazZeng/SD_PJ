@@ -28,12 +28,12 @@ public class Editor  implements Serializable {
     private boolean showid;
     private Document document;
     private HTMLTree htmlTree;
-    private PrintStrategy printStrategy;
+    private Visitor visitor;
     private JLanguageTool langTool = new JLanguageTool(new AmericanEnglish());
     // 构造函数和其他方法...
 
-    public void setPrintStrategy(PrintStrategy printStrategy) {
-        this.printStrategy = printStrategy;
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
     }
     public boolean isShowid() {
         return showid;
@@ -43,13 +43,13 @@ public class Editor  implements Serializable {
     public String print() {
         StringBuilder sb = new StringBuilder();
         this.SpellCheck();
-        this.printStrategy.print(this.htmlTree.getRoot().getChildren().get(0),0,sb);
+        this.visitor.visit(TreeNode.fromHtmlElement(this.htmlTree.getRoot().getChildren().get(0),showid),0,sb);
         return  sb.toString();
     }
-    public Editor(String filepath) {
+    public Editor(String filepath) throws IOException {
         this.filepath = filepath;
         this.commandInvoker = new CommandInvoker();
-
+        this.showid=true;
         // 验证文件是否存在
         File file = new File(filepath);
         if (!file.exists()) {
@@ -57,10 +57,12 @@ public class Editor  implements Serializable {
             this.isModified = true;
             System.out.println("File does not exist. A new file has been created: " + filepath);
         } else {
+            String html = new String(Files.readAllBytes(Paths.get(filepath)));
 
-            this.document = Jsoup.parse(filepath);  // 解析HTML字符串
+            this.document = Jsoup.parse(html);  // 解析HTML字符串
             this.htmlTree = new HTMLTree(this.document);
-            this.printStrategy = new IndentPrintStrategy();
+
+            this.visitor = new IndentVisitor();
             this.isModified = false; // 文件未修改
             System.out.println("File exists. Loading existing file: " + filepath);
         }
@@ -147,7 +149,7 @@ public class Editor  implements Serializable {
 
     public void saveToPath(String filepath) throws IOException {
         StringBuilder sb = new StringBuilder();
-        new IndentPrintStrategy( ).print(this.htmlTree.getRoot().getChildren().get(0),0,sb);
+        new IndentVisitor( ).visit(TreeNode.fromHtmlElement(this.htmlTree.getRoot().getChildren().get(0),showid) ,0,sb);
         Files.write(Paths.get(filepath), sb.toString().getBytes());
     }
 

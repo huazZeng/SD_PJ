@@ -1,7 +1,7 @@
 package org.example.command;
 
 import org.example.console.Editor;
-import org.example.model.HTMLModel;
+
 
 public class EditIdCommand implements CanUndoCommand {
     private Editor editor;

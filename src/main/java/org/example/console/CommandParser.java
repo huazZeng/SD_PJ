@@ -1,6 +1,9 @@
 package org.example.console;
 
 import org.example.command.*;
+import org.example.model.FileIndentVisitor;
+import org.example.model.TreeNode;
+import org.example.model.FileTreeVisitor;
 
 
 import java.io.*;
@@ -10,7 +13,7 @@ public class CommandParser implements Serializable{
     private Map<String, Editor> editors; // 所有打开的编辑器
     private Editor activeEditor;        // 当前活动编辑器
 
-    public CommandParser(CommandInvoker commandInvoker) {
+    public CommandParser() {
         this.editors = new HashMap<>();
         this.activeEditor = null;
         this.restoreExitState();
@@ -28,6 +31,7 @@ public class CommandParser implements Serializable{
             case "print-indent":
             case "print-tree":
             case "spell-check":
+            case "showid":
                 handleEditorCommand(parts);
                 break;
 
@@ -46,13 +50,44 @@ public class CommandParser implements Serializable{
             case "edit":
                 handleEdit(parts);
                 break;
+            case "dir-tree":
+                handleDirTree();
+                break;
+            case "dir-indent":
+                handleDirIndent(parts);
+                break;
             case "exit":
                 handleExit();
                 break;
-
+            case "":
             default:
                 throw new IllegalStateException("No such command");
         }
+    }
+
+    private void handleDirTree() throws IOException {
+        File currentDir = new File(System.getProperty("user.dir"));
+        List<String> modifiedEditors = findModifiedEditors();
+
+        TreeNode root=TreeNode.fromFile(currentDir,modifiedEditors,currentDir);
+
+        FileTreeVisitor treeVisitor = new FileTreeVisitor();
+        StringBuilder sb = new StringBuilder();
+
+        treeVisitor.visit(root,0,sb);
+        System.out.println(sb.toString());
+    }
+
+    private void handleDirIndent(String[] parts) throws IOException {
+        File currentDir = new File(System.getProperty("user.dir"));
+        List<String> modifiedEditors = findModifiedEditors();
+        TreeNode root=TreeNode.fromFile(currentDir,modifiedEditors,currentDir);
+
+        FileIndentVisitor indentVisitor = new FileIndentVisitor();
+        StringBuilder sb = new StringBuilder();
+
+        indentVisitor.visit(root,Integer.parseInt(parts[1]),sb);
+        System.out.println(sb.toString());
     }
 
     private void handleEditorCommand(String[] parts) {
@@ -91,8 +126,21 @@ public class CommandParser implements Serializable{
             case "spell-check":
                 handleSpellCheck(activeEditor);
                 break;
+            case "showid":
+                hadnleShowId(parts,activeEditor);
+                break;
         }
 
+    }
+
+    private void hadnleShowId(String[] parts,Editor editor) {
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("Invalid syntax for insert command.");
+        }
+        String isshowid = parts[1];
+        boolean showid = Boolean.parseBoolean(isshowid);
+        ShowIdCommand showIdCommand = new ShowIdCommand(editor,showid);
+        editor.getCommandInvoker().storeAndExecute(showIdCommand);
     }
 
 
@@ -367,7 +415,22 @@ public class CommandParser implements Serializable{
         }
     }
 
+    public List<String> findModifiedEditors() {
+        // 创建一个列表，用于存储被修改过的编辑器
+        List<String> modifiedEditors = new ArrayList<>();
 
+        // 遍历编辑器映射
+        for (Map.Entry<String, Editor> entry : editors.entrySet()) {
+            Editor editor = entry.getValue();
+            String name = entry.getKey();
+            // 检查编辑器是否被修改
+            if (editor.isModified()) {
+                modifiedEditors.add(name);
+            }
+        }
+
+        return modifiedEditors; // 返回所有修改过的编辑器
+    }
 
 
 

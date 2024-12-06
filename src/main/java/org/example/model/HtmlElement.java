@@ -11,6 +11,10 @@ public class HtmlElement {
     private List<HtmlElement> children;
     private boolean SpellCheckError;
 
+    public boolean isSpellCheckError() {
+        return SpellCheckError;
+    }
+
     public HtmlElement(String tagName, String id, String text) {
         this.tagName = tagName;
         this.id = id != null ? id : tagName;

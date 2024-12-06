@@ -1,9 +1,9 @@
 package org.example.command;
 
 import org.example.console.Editor;
-import org.example.model.HTMLModel;
-import org.example.model.IndentPrintStrategy;
-import org.example.model.TreePrintStrategy;
+
+import org.example.model.FileTreeVisitor;
+import org.example.model.TreeVisitor;
 
 public class PrintTreeCommand implements Command{
 
@@ -16,7 +16,7 @@ public class PrintTreeCommand implements Command{
 
     @Override
     public void execute() {
-        this.editor.setPrintStrategy(new TreePrintStrategy());
+        this.editor.setVisitor(new TreeVisitor());
         System.out.println(this.editor.print());
     }
 }

@@ -1,8 +1,7 @@
 package org.example.console;
 
 import org.example.command.*;
-import org.example.model.HTMLModel;
-import org.example.model.HtmlElement;
+
 
 import java.io.*;
 import java.util.*;
@@ -65,15 +64,23 @@ public class CommandParser {
         switch (parts[0]) {
             case "insert":
                 handleInsert(parts, activeEditor);
+                activeEditor.setModified(true); // 标记文件已修改
                 break;
             case "edit-id":
                 handleEditId(parts, activeEditor);
+                activeEditor.setModified(true); // 标记文件已修改
                 break;
             case "edit-text":
                 handleEditText(parts, activeEditor);
+                activeEditor.setModified(true); // 标记文件已修改
                 break;
             case "delete":
                 handleDelete(parts, activeEditor);
+                activeEditor.setModified(true); // 标记文件已修改
+                break;
+            case "append":
+                handleAppend(parts, activeEditor);
+                activeEditor.setModified(true); // 标记文件已修改
                 break;
             case "print-indent":
                 handlePrintIndent(parts, activeEditor);
@@ -85,61 +92,9 @@ public class CommandParser {
                 handleSpellCheck(activeEditor);
                 break;
         }
-        activeEditor.setModified(true); // 标记文件已修改
+
     }
-    private boolean isInitCommand(String s){
-        return (s.equals("init")) || (s.equals("read"));
-    }
-//    public void parseCommand(String commandline) {
-//        String[] parts = commandline.split(" ");
-//        String action = parts[0];
-//        if (!this.htmlModel.GetStatus() && !isInitCommand(action)) {
-//            throw new IllegalStateException("模型未定义。请确保模型已初始化。");
-//        }
-//        switch (action) {
-//            case "insert":
-//                handleInsert(parts);
-//                break;
-//            case "append":
-//                handleAppend(parts);
-//                break;
-//            case "edit-id":
-//                handleEditId(parts);
-//                break;
-//            case "edit-text":
-//                handleEditText(parts);
-//                break;
-//            case "delete":
-//                handleDelete(parts);
-//                break;
-//            case "print-indent":
-//                handlePrintIndent(parts);
-//                break;
-//            case "print-tree":
-//                handlePrintTree();
-//                break;
-//            case "spell-check":
-//                handleSpellCheck();
-//                break;
-//            case "read":
-//                handleRead(parts);
-//                break;
-//            case "save":
-//                handleSave(parts);
-//                break;
-//            case "init":
-//                handleInit();
-//                break;
-//            case "undo":
-//                handleUndo();
-//                break;
-//            case "redo":
-//                handleRedo();
-//                break;
-//            default:
-//                throw new IllegalStateException("no such command");
-//        }
-//    }
+
 
     private void handleInsert( String[] parts,Editor editor) {
         if (parts.length < 4) {
@@ -149,8 +104,8 @@ public class CommandParser {
         String idValue = parts[2];
         String insertLocation = parts[3];
         String textContent = (parts.length > 4) ? parts[4] : "";
-
-        InsertCommand insertCommand = new InsertCommand(editor.getHtmlModel(), tagName, idValue, insertLocation, textContent);
+        editor.setModified(true);
+        InsertCommand insertCommand = new InsertCommand(editor, tagName, idValue, insertLocation, textContent);
         editor.getCommandInvoker().storeAndExecute(insertCommand);
     }
 
@@ -163,8 +118,7 @@ public class CommandParser {
         String parentElement = parts[3];
         String textContent = (parts.length > 4) ? parts[4] : "";
 
-        HTMLModel htmlModel = editor.getHtmlModel();
-        AppendCommand appendCommand = new AppendCommand(htmlModel, tagName, idValue, parentElement, textContent);
+        AppendCommand appendCommand = new AppendCommand(editor, tagName, idValue, parentElement, textContent);
         editor.getCommandInvoker().storeAndExecute(appendCommand);
     }
 
@@ -175,8 +129,8 @@ public class CommandParser {
         String oldId = parts[1];
         String newId = parts[2];
 
-        HTMLModel htmlModel = editor.getHtmlModel();
-        EditIdCommand editIdCommand = new EditIdCommand(htmlModel, oldId, newId);
+
+        EditIdCommand editIdCommand = new EditIdCommand(editor, oldId, newId);
         editor.getCommandInvoker().storeAndExecute(editIdCommand);
     }
 
@@ -196,8 +150,7 @@ public class CommandParser {
         }
         String newTextContent = textContentBuilder.toString();
 
-        HTMLModel htmlModel = editor.getHtmlModel();
-        EditTextCommand editTextCommand = new EditTextCommand(htmlModel, element, newTextContent);
+        EditTextCommand editTextCommand = new EditTextCommand(editor, element, newTextContent);
         editor.getCommandInvoker().storeAndExecute(editTextCommand);
     }
 
@@ -207,27 +160,26 @@ public class CommandParser {
         }
         String element = parts[1];
 
-        HTMLModel htmlModel = editor.getHtmlModel();
-        DeleteCommand deleteCommand = new DeleteCommand(htmlModel, element);
+
+        DeleteCommand deleteCommand = new DeleteCommand(editor, element);
         editor.getCommandInvoker().storeAndExecute(deleteCommand);
     }
 
     private void handlePrintIndent(String[] parts, Editor editor) {
         int indent = (parts.length > 1) ? Integer.parseInt(parts[1]) : 2;
-        HTMLModel htmlModel = editor.getHtmlModel();
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(htmlModel, indent);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, indent);
         editor.getCommandInvoker().storeAndExecute(printIndentCommand);
     }
 
     private void handlePrintTree(Editor editor) {
-        HTMLModel htmlModel = editor.getHtmlModel();
-        PrintTreeCommand printTreeCommand = new PrintTreeCommand(htmlModel);
+
+        PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor);
         editor.getCommandInvoker().storeAndExecute(printTreeCommand);
     }
 
     private void handleSpellCheck(Editor editor) {
-        HTMLModel htmlModel = editor.getHtmlModel();
-        SpellCheckCommand spellCheckCommand = new SpellCheckCommand(htmlModel);
+
+        SpellCheckCommand spellCheckCommand = new SpellCheckCommand(editor);
         editor.getCommandInvoker().storeAndExecute(spellCheckCommand);
     }
 
@@ -236,8 +188,7 @@ public class CommandParser {
             throw new IllegalArgumentException("Invalid syntax for Read command.");
         }
         String filepath = parts[1];
-        HTMLModel htmlModel = editor.getHtmlModel();
-        ReadCommand readCommand = new ReadCommand(htmlModel, filepath);
+        ReadCommand readCommand = new ReadCommand(editor, filepath);
         editor.getCommandInvoker().storeAndExecute(readCommand);
     }
 
@@ -246,14 +197,14 @@ public class CommandParser {
             throw new IllegalArgumentException("Invalid syntax for Save command.");
         }
         String filepath = parts[1];
-        HTMLModel htmlModel = editor.getHtmlModel();
-        SaveCommand saveCommand = new SaveCommand(htmlModel, filepath);
+
+        SaveCommand saveCommand = new SaveCommand(editor, filepath);
         editor.getCommandInvoker().storeAndExecute(saveCommand);
     }
 
     private void handleInit(Editor editor) {
-        HTMLModel htmlModel = editor.getHtmlModel();
-        InitCommand initCommand = new InitCommand(htmlModel);
+
+        InitCommand initCommand = new InitCommand(editor);
         editor.getCommandInvoker().storeAndExecute(initCommand);
     }
 
@@ -275,7 +226,9 @@ public class CommandParser {
             throw new IllegalStateException("File is already loaded.");
         }
         Editor newEditor = new Editor(filepath);
+        activeEditor = newEditor;
 
+        editors.put(filepath,newEditor);
 
 
     }
@@ -284,8 +237,8 @@ public class CommandParser {
         if (activeEditor == null) {
             throw new IllegalStateException("No active editor to save.");
         }
-        HTMLModel htmlModel = activeEditor.getHtmlModel();
-        htmlModel.saveToPath(activeEditor.getFilepath());
+
+        this.activeEditor.saveToPath(activeEditor.getFilepath());
         activeEditor.setModified(false); // 文件已保存
     }
 
@@ -299,8 +252,7 @@ public class CommandParser {
             String response = scanner.nextLine();
             //TODO:在此处抛出文件未保存的异常（？）
             if (response.equalsIgnoreCase("yes")) {
-                HTMLModel htmlModel = activeEditor.getHtmlModel();
-                htmlModel.saveToPath(activeEditor.getFilepath());
+                activeEditor.saveToPath(activeEditor.getFilepath());
                 activeEditor.setModified(false); // 文件已保存
             }
         }
@@ -341,10 +293,11 @@ public class CommandParser {
                 Scanner scanner = new Scanner(System.in);
                 String response = scanner.nextLine();
                 if (response.equalsIgnoreCase("yes")) {
-                    editor.getHtmlModel().saveToPath(editor.getFilepath());
+                    editor.saveToPath(editor.getFilepath());
                 }
             }
         }
+        this.saveExitState();
         System.exit(0); // 退出程序
     }
 
@@ -353,7 +306,7 @@ public class CommandParser {
         String activeEditorPath = (activeEditor != null) ? activeEditor.getFilepath() : null;
         Map<String, Boolean> showidSettings = new HashMap<>();
         for (Editor editor : editors.values()) {
-            showidSettings.put(editor.getFilepath(), editor.getshowid());
+            showidSettings.put(editor.getFilepath(), editor.isShowid());
         }
 
         // 创建 ExitState 对象
@@ -369,9 +322,17 @@ public class CommandParser {
     }
 
     // 恢复退出状态
-    private void restoreExitState() {
+    public void restoreExitState() {
+        File exitStateFile = new File("exit_state.dat");
+
+        // 检查文件是否存在
+        if (!exitStateFile.exists()) {
+            System.out.println("No previous exit state file found. Starting with a fresh session.");
+            return;
+        }
+
         // 从字节流文件反序列化 ExitState 对象
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("exit_state.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(exitStateFile))) {
             ExitState exitState = (ExitState) ois.readObject();
 
             // 恢复编辑器列表
@@ -399,9 +360,10 @@ public class CommandParser {
 
             System.out.println("Exit state has been restored.");
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("No previous exit state found. Starting with a fresh session.");
+            System.err.println("Failed to restore exit state: " + e.getMessage());
         }
     }
+
 
     // ExitState 类实现 Serializable
     class ExitState implements Serializable {

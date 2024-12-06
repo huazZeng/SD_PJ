@@ -1,23 +1,24 @@
 package org.example.command;
 
+import org.example.console.Editor;
 import org.example.model.HTMLModel;
 import org.example.model.IndentPrintStrategy;
 import org.example.model.TreePrintStrategy;
 
 public class PrintIndentCommand implements Command{
 
-    private final HTMLModel htmlModel;
+    private final Editor editor;
     private final int indent;
 
-    public PrintIndentCommand(HTMLModel htmlModel, int indent) {
-        this.htmlModel = htmlModel;
+    public PrintIndentCommand(Editor editor, int indent) {
+        this.editor = editor;
         this.indent = indent;
     }
 
     @Override
     public void execute() {
-        this.htmlModel.setPrintStrategy(new IndentPrintStrategy());
+        this.editor.setPrintStrategy(new IndentPrintStrategy());
 
-        System.out.println(this.htmlModel.print());
+        System.out.println(this.editor.print());
     }
 }

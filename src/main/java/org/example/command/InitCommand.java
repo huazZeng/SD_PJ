@@ -1,16 +1,17 @@
 package org.example.command;
 
+import org.example.console.Editor;
 import org.example.model.HTMLModel;
 
 public class InitCommand implements IOCommand{
-    private final HTMLModel htmlMddel;
+    private final Editor editor;
 
-    public InitCommand(HTMLModel htmlModel) {
-        this.htmlMddel = htmlModel;
+    public InitCommand(Editor editor) {
+        this.editor = editor;
     }
 
     @Override
     public void execute() {
-        this.htmlMddel.init();
+        this.editor.init();
     }
 }

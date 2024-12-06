@@ -1,15 +1,16 @@
 package org.example.command;
 
+import org.example.console.Editor;
 import org.example.model.HTMLModel;
 
 public class AppendCommand implements CanUndoCommand {
-    private HTMLModel htmlModel;
+    private Editor editor;
     private String tagName;       // 要添加的标签名
     private String idValue;       // 元素的ID（可选）
     private String parentElement;  // 父元素的标签名
     private String textContent;
-    public AppendCommand(HTMLModel htmlModel, String tagName, String idValue, String parentElement, String textContent) {
-        this.htmlModel = htmlModel;
+    public AppendCommand(Editor editor, String tagName, String idValue, String parentElement, String textContent) {
+        this.editor = editor;
         this.tagName = tagName;
         this.idValue = idValue;
         this.parentElement = parentElement;
@@ -18,12 +19,12 @@ public class AppendCommand implements CanUndoCommand {
 
     @Override
     public void execute() {
-        this.htmlModel.append(this.tagName,this.idValue,this.parentElement,this.textContent);
+        this.editor.append(this.tagName,this.idValue,this.parentElement,this.textContent);
     }
 
 
     @Override
     public void undo() {
-        this.htmlModel.delete(this.idValue);
+        this.editor.delete(this.idValue);
     }
 }

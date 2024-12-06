@@ -19,6 +19,10 @@ public class HTMLTree {
         return idMap.get(id);
     }
 
+    public Map<String, HtmlElement> getIdMap() {
+        return idMap;
+    }
+
     public String getElementContent(String elementId) {
         HtmlElement element = getElementById(elementId);
         return element != null ? element.getInnerHtml() : null;

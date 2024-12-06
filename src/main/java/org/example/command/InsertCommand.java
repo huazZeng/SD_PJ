@@ -1,17 +1,18 @@
 package org.example.command;
 
 
+import org.example.console.Editor;
 import org.example.model.HTMLModel;
 
 public class InsertCommand implements CanUndoCommand{
-    private HTMLModel htmlModel;
+    private Editor editor;
     private String tagName;
     private String idValue;
     private String insertLocation;
     private String textContent;
 
-    public InsertCommand(HTMLModel htmlModel, String tagName, String idValue, String insertLocation, String textContent) {
-        this.htmlModel = htmlModel;
+    public InsertCommand(Editor editor, String tagName, String idValue, String insertLocation, String textContent) {
+        this.editor = editor;
         this.tagName = tagName;
         this.idValue = idValue;
         this.insertLocation = insertLocation;
@@ -21,14 +22,14 @@ public class InsertCommand implements CanUndoCommand{
     @Override
     public void execute() {
         // Logic to insert the element into the HTML model
-        htmlModel.insert(this.tagName,this.idValue,this.insertLocation,this.textContent);
+        editor.insert(this.tagName,this.idValue,this.insertLocation,this.textContent);
         return ;
     }
 
     @Override
     public void undo() {
         // Logic to undo the insertion (e.g., delete the element)
-        htmlModel.delete(this.idValue);
+        editor.delete(this.idValue);
     }
 }
 

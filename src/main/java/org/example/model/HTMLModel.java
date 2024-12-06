@@ -28,6 +28,7 @@ public class HTMLModel {
 
     public String print() {
         StringBuilder sb = new StringBuilder();
+        this.SpellCheck();
         this.printStrategy.print(this.htmlTree.getRoot().getChildren().get(0),0,sb);
         return  sb.toString();
     }
@@ -54,11 +55,9 @@ public class HTMLModel {
         return htmlTree.getElementById(id);
     }
     public String getElementContent(String elementId) {
-
         return htmlTree.getElementContent(elementId);
     }
     public String getNextElementId(String elementId) {
-
         return htmlTree.getNextElementId(elementId);
     }
 
@@ -122,10 +121,8 @@ public class HTMLModel {
         // 获取所有元素的 ID 和对应的文本内容
         Map<String, String> id2Context = htmlTree.getId2Context();
         Map<String, String> result = new HashMap<>();
-
+        Map<String,HtmlElement> idmap = htmlTree.getIdMap();
         // 初始化 LanguageTool，使用美国英语
-
-
         // 遍历每个元素的文本内容，进行拼写检查
         for (Map.Entry<String, String> entry : id2Context.entrySet()) {
             String id = entry.getKey();
@@ -134,7 +131,8 @@ public class HTMLModel {
                 // 检查文本
                 List<RuleMatch> matches = langTool.check(text);
                 for (RuleMatch match : matches) {
-
+                    HtmlElement element = idmap.get(id);
+                    element.setSpellCheckError(true);
                     result.put(id,text.substring(match.getFromPos(), match.getToPos())+'\n'+match.getSuggestedReplacements().toString());
 
                 }

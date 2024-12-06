@@ -9,12 +9,17 @@ public class HtmlElement {
     private String text;
     private HtmlElement parent;
     private List<HtmlElement> children;
+    private boolean SpellCheckError;
 
     public HtmlElement(String tagName, String id, String text) {
         this.tagName = tagName;
         this.id = id != null ? id : tagName;
         this.text = text;
         this.children = new ArrayList<>();
+    }
+
+    public void setSpellCheckError(boolean spellCheckError) {
+        SpellCheckError = spellCheckError;
     }
 
     public void addChild(HtmlElement child) {

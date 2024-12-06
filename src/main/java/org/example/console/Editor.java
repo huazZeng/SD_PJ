@@ -9,6 +9,7 @@ import org.languagetool.rules.RuleMatch;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -16,22 +17,10 @@ import java.util.List;
 import java.util.Map;
 import org.example.command.CommandInvoker;
 import org.example.model.*;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.languagetool.JLanguageTool;
-import org.languagetool.language.AmericanEnglish;
-import org.languagetool.rules.RuleMatch;
-
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class Editor {
+
+public class Editor  implements Serializable {
     private String filepath;        // 文件路径
     private boolean isModified;     // 是否修改过
     private CommandInvoker commandInvoker;

@@ -6,7 +6,7 @@ import org.example.command.*;
 import java.io.*;
 import java.util.*;
 
-public class CommandParser {
+public class CommandParser implements Serializable{
     private Map<String, Editor> editors; // 所有打开的编辑器
     private Editor activeEditor;        // 当前活动编辑器
 
@@ -297,6 +297,7 @@ public class CommandParser {
                 }
             }
         }
+        System.out.println(1111);
         this.saveExitState();
         System.exit(0); // 退出程序
     }
@@ -317,8 +318,10 @@ public class CommandParser {
             oos.writeObject(exitState);
             System.out.println("Exit state has been saved.");
         } catch (IOException e) {
-            System.out.println("Error saving exit state: " + e.getMessage());
+            System.err.println("Error saving exit state.");
+            e.printStackTrace(); // 打印堆栈信息
         }
+
     }
 
     // 恢复退出状态
@@ -365,19 +368,8 @@ public class CommandParser {
     }
 
 
-    // ExitState 类实现 Serializable
-    class ExitState implements Serializable {
-        private static final long serialVersionUID = 1L; // 为了确保版本兼容性
-        List<String> editorList;
-        String activeEditorPath;
-        Map<String, Boolean> showidSettings;
 
-        ExitState(List<String> editorList, String activeEditorPath, Map<String, Boolean> showidSettings) {
-            this.editorList = editorList;
-            this.activeEditorPath = activeEditorPath;
-            this.showidSettings = showidSettings;
-        }
-    }
+
 
 }
 

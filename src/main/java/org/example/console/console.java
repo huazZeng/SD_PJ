@@ -13,7 +13,7 @@ public class console {
         CommandInvoker commandInvoker = new CommandInvoker();
         HTMLModel htmlModel = new HTMLModel();
         CommandParser parser = new CommandParser(commandInvoker);
-        String exitCommand = "exit"; // 定义推出条件
+
 
         System.out.println("请输入命令（输入 'exit' 退出）：");
 
@@ -21,9 +21,6 @@ public class console {
         while (true) {
             String input = scanner.nextLine(); // 读取输入命令
 
-            if (input.equalsIgnoreCase(exitCommand)) { // 检查是否为推出条件
-                break; // 退出循环
-            }
             try {
                 parser.parseCommand(input);
             }
@@ -37,9 +34,6 @@ public class console {
             }
 
         }
-
-
-        scanner.close();
 
     }
 }

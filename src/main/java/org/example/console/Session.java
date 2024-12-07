@@ -1,7 +1,7 @@
 package org.example.console;
 
-import org.example.model.FileIndentVisitor;
-import org.example.model.FileTreeVisitor;
+import org.example.model.visitor.FileIndentVisitor;
+import org.example.model.visitor.FileTreeVisitor;
 import org.example.model.TreeNode;
 
 import java.io.*;
@@ -15,6 +15,9 @@ public class Session {
         this.editors = new HashMap<>();
         this.activeEditor = null;
         this.restoreExitState();
+
+
+        this.handleEditorList();
     }
 
     public Editor getActiveEditor() {

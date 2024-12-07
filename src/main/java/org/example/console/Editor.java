@@ -1,4 +1,6 @@
 package org.example.console;
+import org.example.model.visitor.IndentVisitor;
+import org.example.model.visitor.Visitor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

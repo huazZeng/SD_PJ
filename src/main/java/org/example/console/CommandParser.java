@@ -1,13 +1,10 @@
 package org.example.console;
 
-import org.example.command.*;
-import org.example.model.FileIndentVisitor;
-import org.example.model.TreeNode;
-import org.example.model.FileTreeVisitor;
+import org.example.command.EditorCommand.*;
+import org.example.command.SessionCommand.*;
 
 
 import java.io.*;
-import java.util.*;
 
 public class CommandParser implements Serializable{
 

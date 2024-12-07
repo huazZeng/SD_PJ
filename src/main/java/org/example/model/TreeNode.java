@@ -1,4 +1,7 @@
 package org.example.model;
+
+import org.example.model.visitor.Visitor;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +58,7 @@ public class TreeNode {
     }
 
     // 接受访问者
-    public void accept(PrintVisitor visitor, int indent, StringBuilder sb) {
+    public void accept(Visitor visitor, int indent, StringBuilder sb) {
         visitor.visit(this, indent, sb);
     }
 

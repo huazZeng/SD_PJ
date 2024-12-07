@@ -10,6 +10,9 @@ public class FileTreeVisitor implements Visitor {
         sb.append(prefix).append("├── ");
 
         sb.append(element.getId());
+        if (element.isIsmodified()){
+            sb.append("*");
+        }
         sb.append("\n");
 
 

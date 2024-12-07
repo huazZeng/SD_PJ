@@ -1,5 +1,6 @@
 package org.example.command;
 
+import java.io.IOException;
 import java.util.Stack;
 
 public class CommandInvoker {
@@ -13,7 +14,12 @@ public class CommandInvoker {
         return undoneCommands.size();
     }
     public void storeAndExecute(Command command)  {
-        command.execute();
+        try {
+            command.execute();
+        }
+        catch (IOException e ){
+            System.out.println(e.toString());
+        }
         if (command instanceof CanUndoCommand) {
             commandStack.push((CanUndoCommand) command);
             undoneCommands.clear();
@@ -35,7 +41,13 @@ public class CommandInvoker {
     public void redoLastCommand() {
         if (!undoneCommands.isEmpty()) {
             CanUndoCommand command = undoneCommands.pop();
-            command.execute();
+            try {
+                command.execute();
+            }
+            catch (IOException e ){
+                System.out.println(e.toString());
+            }
+
             commandStack.push(command);
         }
     }

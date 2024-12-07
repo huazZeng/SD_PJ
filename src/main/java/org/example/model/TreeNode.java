@@ -65,9 +65,7 @@ public class TreeNode {
 
         // 判断文件是否被修改
         boolean isModified = modifiedFiles.contains(relativePath);
-        System.out.println(isModified);
-        System.out.println(relativePath);
-        System.out.println(modifiedFiles.get(0));
+
         // 创建节点
         TreeNode node = new TreeNode(null, file.getName(), null, isModified, true,isModified);
 

@@ -55,6 +55,7 @@ public class Editor  implements Serializable {
         // 验证文件是否存在
         File file = new File(filepath);
         if (!file.exists()) {
+            file.createNewFile();
             this.init();
             this.isModified = true;
             System.out.println("File does not exist. A new file has been created: " + filepath);

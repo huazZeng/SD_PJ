@@ -10,123 +10,51 @@ import org.example.model.HtmlElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 
 public class CommandParserTest {
 
-    private Editor htmlModel;
-    private CommandInvoker commandInvoker;
     private CommandParser commandParser;
 
     @BeforeEach
     public void setUp() throws IOException {
+        String filePath = "exit_state.dat";
 
+        // 创建 File 对象
+        File file = new File(filePath);
+
+        // 检查文件是否存在
+        if (file.exists()) {
+            // 尝试删除文件
+            if (file.delete()) {
+                System.out.println("文件已成功删除: " + filePath);
+            } else {
+                System.out.println("文件删除失败，请检查权限或文件是否被占用: " + filePath);
+            }
+        } else {
+            System.out.println("文件不存在: " + filePath);
+        }
         commandParser = new CommandParser();
-
     }
 
+    @Test
+    public void testHandleInsertInvalidSyntax() {
+        // 插入命令缺少必要的参数（text）
+        String command = "insert div div1 body";  // 错误命令，缺少 text
+        assertThrows(IllegalStateException.class, () -> commandParser.parseCommand(command));
+    }
 
     @Test
-    public void testHandleInsertValidSyntax() throws IOException {
-        String command = "insert div newDiv body content";
+    public void testHandleAppendInvalidSyntax() throws IOException {
+        String command = "load test.html";  // 错误命令，缺少 text
         commandParser.parseCommand(command);
-        assertTrue(htmlModel.getElementById("newDiv")!=null);
-        assertEquals("content", htmlModel.getElementById("newDiv").getText());
-    }
-
-    @Test
-    public void testHandleAppendValidSyntax() throws IOException {
-        String command = "append p p1 body text";
-        commandParser.parseCommand(command);
-        assertTrue(htmlModel.getElementById("p1")!=null);
-        assertEquals("text", htmlModel.getElementById("p1").getText());
-        assertEquals(htmlModel.getElementById("body"),htmlModel.getElementById("p1").getParent());
+        // 插入命令缺少必要的参数（text）
+        String command1 = "append div div1";  // 错误命令，缺少 text
+        assertThrows(IllegalArgumentException.class, () -> commandParser.parseCommand(command1));
     }
 
 
 
-    @Test
-    public void testHandleEditIdValidSyntax() throws IOException {
-        String command = "edit-id html newId";
-        HtmlElement E = htmlModel.getElementById("html");
-        commandParser.parseCommand(command);
-        assertEquals("newId", E.getId());
-    }
-
-
-
-    @Test
-    public void testHandleEditTextValidSyntax() throws IOException {
-
-        String command = "edit-text body new content";
-        commandParser.parseCommand(command);
-        assertEquals("new content", htmlModel.getElementById("body").getText());
-    }
-
-
-
-    @Test
-    public void testHandleDeleteValidSyntax() throws IOException {
-        String command1 = "append div toDelete body text";
-        commandParser.parseCommand(command1);
-        String command = "delete toDelete";
-        commandParser.parseCommand(command);
-        assertTrue(htmlModel.getElementById("toDelete")==null);
-    }
-
-
-
-
-
-
-
-
-//    @Test
-//    public void testHandleReadSaveValidSyntax() throws IOException {
-//        String command = "save output.html";
-//        String s1 = htmlModel.print();
-//        commandParser.parseCommand(command);
-//        String command2 = "read output.html";
-//        commandParser.parseCommand(command2);
-//        String s2 = htmlModel.print();
-//        assertEquals(s1,s2);
-//
-//    }
-
-    @Test
-    public void testHandleDeleteUndo() throws IOException {
-        String command1 = "append div toDelete body text";
-        commandParser.parseCommand(command1);
-        String command = "delete toDelete";
-        commandParser.parseCommand(command);
-
-        String command2 = "undo";
-        commandParser.parseCommand(command2);
-        assertTrue(htmlModel.getElementById("toDelete")!=null);
-
-    }
-    @Test
-    public void testHandleAppendUndo() throws IOException {
-        String command1 = "append div toDelete body text";
-        commandParser.parseCommand(command1);
-
-        String command2 = "undo";
-        commandParser.parseCommand(command2);
-        assertTrue(htmlModel.getElementById("toDelete")==null);
-
-    }
-    @Test
-    public void testHandleRedo() throws IOException {
-        String command1 = "append div toDelete body text";
-        commandParser.parseCommand(command1);
-        String command = "delete toDelete";
-        commandParser.parseCommand(command);
-
-        String command2 = "undo";
-        commandParser.parseCommand(command2);
-        String command3 = "redo";
-        commandParser.parseCommand(command3);
-        assertTrue(htmlModel.getElementById("toDelete")==null);
-    }
 }

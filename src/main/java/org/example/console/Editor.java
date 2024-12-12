@@ -1,4 +1,5 @@
 package org.example.console;
+import org.example.command.EditorCommand.*;
 import org.example.model.visitor.IndentVisitor;
 import org.example.model.visitor.Visitor;
 import org.jsoup.Jsoup;
@@ -134,6 +135,121 @@ public class Editor  implements Serializable {
     public void delete(String elementId) {
         htmlTree.delete(elementId);
     }
+
+    void handleInsert(String[] parts) {
+        if (parts.length < 4) {
+            throw new IllegalArgumentException("Invalid syntax for insert command.");
+        }
+        String tagName = parts[1];
+        String idValue = parts[2];
+        String insertLocation = parts[3];
+        String textContent = (parts.length > 4) ? parts[4] : "";
+        this.setModified(true);
+        InsertCommand insertCommand = new InsertCommand(this, tagName, idValue, insertLocation, textContent);
+        this.getCommandInvoker().storeAndExecute(insertCommand);
+    }
+
+    void handleAppend(String[] parts) {
+        if (parts.length < 4) {
+            throw new IllegalArgumentException("Invalid syntax for append command.");
+        }
+        String tagName = parts[1];
+        String idValue = parts[2];
+        String parentElement = parts[3];
+        String textContent = (parts.length > 4) ? parts[4] : "";
+
+        AppendCommand appendCommand = new AppendCommand(this, tagName, idValue, parentElement, textContent);
+        this.getCommandInvoker().storeAndExecute(appendCommand);
+    }
+
+    void handleEditId(String[] parts) {
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid syntax for editId command.");
+        }
+        String oldId = parts[1];
+        String newId = parts[2];
+
+
+        EditIdCommand editIdCommand = new EditIdCommand(this, oldId, newId);
+        this.getCommandInvoker().storeAndExecute(editIdCommand);
+    }
+
+    void handleEditText(String[] parts) {
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("Invalid syntax for editText command.");
+        }
+        String element = parts[1];
+
+        // 拼接newTextContent为2之后的所有部分
+        StringBuilder textContentBuilder = new StringBuilder();
+        for (int i = 2; i < parts.length; i++) {
+            if (i > 2) {
+                textContentBuilder.append(" "); // 添加空格分隔多个部分
+            }
+            textContentBuilder.append(parts[i]);
+        }
+        String newTextContent = textContentBuilder.toString();
+
+        EditTextCommand editTextCommand = new EditTextCommand(this, element, newTextContent);
+        this.getCommandInvoker().storeAndExecute(editTextCommand);
+    }
+
+    void handleDelete(String[] parts) {
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Invalid syntax for delete command.");
+        }
+        String element = parts[1];
+
+
+        DeleteCommand deleteCommand = new DeleteCommand(this, element);
+        this.getCommandInvoker().storeAndExecute(deleteCommand);
+    }
+
+    void handlePrintIndent(String[] parts) {
+        int indent = (parts.length > 1) ? Integer.parseInt(parts[1]) : 2;
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(this, indent);
+        this.getCommandInvoker().storeAndExecute(printIndentCommand);
+    }
+
+    void handlePrintTree() {
+
+        PrintTreeCommand printTreeCommand = new PrintTreeCommand(this);
+        this.getCommandInvoker().storeAndExecute(printTreeCommand);
+    }
+
+    void handleSpellCheck() {
+
+        SpellCheckCommand spellCheckCommand = new SpellCheckCommand(this);
+        this.getCommandInvoker().storeAndExecute(spellCheckCommand);
+    }
+    void hadnleShowId(String[] parts) {
+        boolean isshowid=Boolean.parseBoolean(parts[0]);
+        ShowIdCommand showIdCommand=new ShowIdCommand(this,isshowid);
+        showIdCommand.execute();
+    }
+    private void handleRead(String[] parts) {
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Invalid syntax for Read command.");
+        }
+        String filepath = parts[1];
+        ReadCommand readCommand = new ReadCommand(this, filepath);
+        this.getCommandInvoker().storeAndExecute(readCommand);
+    }
+
+
+
+
+    void handleUndo() {
+        this.getCommandInvoker().undoLastCommand();
+    }
+
+    void handleRedo() {
+        this.getCommandInvoker().redoLastCommand();
+    }
+
+
+
+
 
     public void init() {
         this.document = Jsoup.parse("<html>\n" +

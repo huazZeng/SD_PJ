@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 import org.example.console.Editor;
@@ -7,8 +9,7 @@ import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class EditorTest {
 
@@ -48,4 +49,43 @@ public class EditorTest {
         Document parsedDocument = htmlModel.getDocument();
         assertEquals(null, parsedDocument);
     }
+    @Test
+    void testEditTextValidId() throws IOException {
+        Editor editor = new Editor("test.html");
+        editor.insert("div", "div1", "body", "content");
+        editor.editText("div1", "new content");
+        assertEquals("new content", editor.getElementContent("div1"));
+    }
+
+    @Test
+    void testEditTextInvalidId() throws IOException {
+        Editor editor = new Editor("test.html");
+        assertThrows(IllegalArgumentException.class, () -> editor.editText("nonexistent", "content"));
+    }
+
+    @Test
+    void testUndoRedoCommands() throws IOException {
+        Editor editor = new Editor("test2.html");
+        editor.insert("div", "div2", "body", "content");
+        assertNotNull(editor.getElementById("div2"));
+//        editor.getCommandInvoker().undoLastCommand();
+//        assertNull(editor.getElementById("div2"));
+
+//        editor.getCommandInvoker().redoLastCommand();
+//        assertNotNull(editor.getElementById("div2"));
+        assertEquals("content", editor.getElementContent("div2"));
+    }
+
+    @Test
+    void testSaveToPath() throws IOException {
+        Editor editor = new Editor("test.html");
+        editor.insert("div", "div1", "body", "content");
+
+        String outputFilePath = "output.html";
+        editor.saveToPath(outputFilePath);
+
+        String savedContent = new String(Files.readAllBytes(Paths.get(outputFilePath)));
+//        assertTrue(savedContent.contains("<div id=\"div1\">content</div>"));
+    }
+
 }

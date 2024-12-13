@@ -144,6 +144,7 @@ CommandParser只有基本的命令解析功能，所以测试主要在于指令�
 
 
 ####    Session
+Session主要测试了切换Editor，输出Editorlist，目录输出，加载Editor等指令,测试会话层的指令
  1. **文件加载（Handle Load）**：
    - **`testHandleLoadValidFile`**：确保加载一个有效文件后，`Session` 的 `activeEditor` 被正确设置，且文件被正确添加到 `editors` 映射中。
    - **`testHandleLoadDuplicateFile`**：测试加载相同文件两次时，抛出 `IllegalStateException` 异常，确保重复加载文件时不允许发生。
@@ -173,6 +174,7 @@ CommandParser只有基本的命令解析功能，所以测试主要在于指令�
 
 
 ####    Editor
+Editor主要测试了文本解析，文本编辑，文本插入，文本删除，文本修改，文本查找等指令，测试编辑的指令
 1. **HTML Parsing**:
    - **`testHTMLModel_ParsesHTMLCorrectly`**：测试 `Editor` 能正确解析有效的 HTML 内容。
    - **`testHTMLModel_EmptyHTML`**：测试空 HTML 文档解析，确保返回正确的内容（空字符串）。

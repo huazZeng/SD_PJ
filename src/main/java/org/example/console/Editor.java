@@ -136,7 +136,7 @@ public class Editor  implements Serializable {
         htmlTree.delete(elementId);
     }
 
-    void handleInsert(String[] parts) {
+    public void handleInsert(String[] parts) {
         if (parts.length < 4) {
             throw new IllegalArgumentException("Invalid syntax for insert command.");
         }
@@ -149,7 +149,7 @@ public class Editor  implements Serializable {
         this.getCommandInvoker().storeAndExecute(insertCommand);
     }
 
-    void handleAppend(String[] parts) {
+    public void handleAppend(String[] parts) {
         if (parts.length < 4) {
             throw new IllegalArgumentException("Invalid syntax for append command.");
         }
@@ -162,7 +162,7 @@ public class Editor  implements Serializable {
         this.getCommandInvoker().storeAndExecute(appendCommand);
     }
 
-    void handleEditId(String[] parts) {
+    public void handleEditId(String[] parts) {
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid syntax for editId command.");
         }
@@ -174,7 +174,7 @@ public class Editor  implements Serializable {
         this.getCommandInvoker().storeAndExecute(editIdCommand);
     }
 
-    void handleEditText(String[] parts) {
+    public void handleEditText(String[] parts) {
         if (parts.length < 2) {
             throw new IllegalArgumentException("Invalid syntax for editText command.");
         }
@@ -194,7 +194,7 @@ public class Editor  implements Serializable {
         this.getCommandInvoker().storeAndExecute(editTextCommand);
     }
 
-    void handleDelete(String[] parts) {
+    public void handleDelete(String[] parts) {
         if (parts.length != 2) {
             throw new IllegalArgumentException("Invalid syntax for delete command.");
         }
@@ -239,11 +239,11 @@ public class Editor  implements Serializable {
 
 
 
-    void handleUndo() {
+    public void handleUndo() {
         this.getCommandInvoker().undoLastCommand();
     }
 
-    void handleRedo() {
+    public void handleRedo() {
         this.getCommandInvoker().redoLastCommand();
     }
 
